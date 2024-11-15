@@ -53,6 +53,6 @@ jobs:
     steps:
       - name: Test        
         run: |
-          echo $matrix
-          echo $matrix_versions
-          echo $runs_on
+          echo ${{needs.configure_builds.ouputs.matrix}}
+          echo ${{needs.configure_builds.ouputs.matrix_versions}}
+          echo ${{needs.configure_builds.ouputs.runs_on}}
