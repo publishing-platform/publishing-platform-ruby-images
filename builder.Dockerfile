@@ -1,5 +1,5 @@
 ARG RUBY_MAJOR
-FROM ghcr.io/alphagov/govuk-ruby-base:${RUBY_MAJOR}
+FROM ghcr.io/publishing-platform/publishing-platform-ruby-base:${RUBY_MAJOR}
 
 RUN install_packages \
     g++ git gpg libc-dev libcurl4-openssl-dev libgdbm-dev libssl-dev \
@@ -14,4 +14,4 @@ RUN echo 'gem: --no-document' >> /etc/gemrc
 
 ENV SECRET_KEY_BASE_DUMMY=1
 
-LABEL org.opencontainers.image.source=https://github.com/alphagov/govuk-ruby-images
+LABEL org.opencontainers.image.source=https://github.com/publishing-platform/publishing-platform-ruby-images

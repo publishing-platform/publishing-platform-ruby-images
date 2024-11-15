@@ -65,7 +65,7 @@ COPY --from=builder /usr/local/include/ /usr/local/include/
 COPY --from=builder /usr/local/lib/ /usr/local/lib/
 COPY --from=builder /usr/local/share/ /usr/local/share/
 
-# Environment variables common to most GOV.UK apps.
+# Environment variables common to most Publishing Platform apps.
 ENV APP_HOME=/app \
     GEM_HOME=/usr/local/bundle \
     GEM_PATH=/usr/local/lib/ruby/gems/$RUBY_MAJOR \
@@ -81,9 +81,9 @@ ENV APP_HOME=/app \
     NODE_ENV=production \
     BUNDLE_WITHOUT="development test cucumber" \
     BOOTSNAP_CACHE_DIR=/var/cache \
-    GOVUK_APP_DOMAIN=www.gov.uk \
-    GOVUK_WEBSITE_ROOT=https://www.gov.uk \
-    GOVUK_PROMETHEUS_EXPORTER=true \
+    PUBLISHING_PLATFORM_APP_DOMAIN=www.publishing-platform.co.uk \
+    PUBLISHING_PLATFORM_WEBSITE_ROOT=https://www.publishing-platform.co.uk \
+    PUBLISHING_PLATFORM_PROMETHEUS_EXPORTER=true \
     DEBIAN_FRONTEND=noninteractive \
     TZ=Europe/London
 
@@ -150,4 +150,4 @@ RUN set -x; \
     bundle version; \
     rm -r /tmp/*;
 
-LABEL org.opencontainers.image.source=https://github.com/alphagov/govuk-ruby-images    
+LABEL org.opencontainers.image.source=https://github.com/publishing-platform/publishing-platform-ruby-images
