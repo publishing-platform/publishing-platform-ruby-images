@@ -1,4 +1,5 @@
-FROM public.ecr.aws/lts/ubuntu:22.04_stable AS builder
+FROM public.ecr.aws/lts/ubuntu:24.04_stable AS builder
+
 SHELL ["/bin/bash", "-euo", "pipefail", "-c"]
 
 # Helper script for installing Debian packages.
@@ -23,8 +24,6 @@ RUN install_packages curl ca-certificates g++ gpg libc-dev make bison patch libd
 # TODO: do this externally, in the build script.
 RUN curl -fsSL https://deb.nodesource.com/gpgkey/nodesource.gpg.key | gpg --dearmor > /usr/share/keyrings/nodesource.gpg
 
-# TODO: do the download and verification externally, in the build script.
-COPY SHA256SUMS /
 
 # Build/install Ruby and update the default gems so that we have an up-to-date
 # version of Bundler.
@@ -55,7 +54,8 @@ RUN set -x; \
     gem cleanup;
 
 
-FROM public.ecr.aws/lts/ubuntu:22.04_stable
+FROM public.ecr.aws/lts/ubuntu:24.04_stable
+
 SHELL ["/bin/bash", "-euo", "pipefail", "-c"]
 ARG RUBY_MAJOR
 
@@ -109,13 +109,15 @@ ENV PATH=${TMPDIR_FOR_RUBY_WRAPPERS_DIR}:${PATH}
 
 # Install node.js, yarn and other runtime dependencies.
 COPY --from=builder /usr/share/keyrings/nodesource.gpg /usr/share/keyrings/
-RUN install_packages ca-certificates curl libjemalloc-dev libgdbm6 libyaml-0-2 \
+
+RUN install_packages ca-certificates curl libjemalloc-dev libgdbm6 \
+      libjsonnet0 libyaml-0-2 \
       libmariadb3 libpq5 mariadb-client postgresql-client tzdata; \
-    echo "deb [signed-by=/usr/share/keyrings/nodesource.gpg] https://deb.nodesource.com/node_18.x jammy main" | tee /etc/apt/sources.list.d/nodesource.list; \
+      curl -fsSL https://deb.nodesource.com/setup_20.x | bash; \
     install_packages nodejs; \
     echo -n node version:\ ; node -v; \
     echo -n npm version:\ ; npm -v; \
-    npm install -g yarn@1.22.19
+    corepack enable
 
 # Use jemalloc by default.
 ENV LD_PRELOAD=libjemalloc.so
@@ -147,5 +149,3 @@ RUN set -x; \
     gem env; \
     bundle version; \
     rm -r /tmp/*;
-
-LABEL org.opencontainers.image.source=https://github.com/alphagov/govuk-ruby-images
