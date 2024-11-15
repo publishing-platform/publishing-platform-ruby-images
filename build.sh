@@ -22,23 +22,23 @@ build_version() {
 
   for IMAGE_TYPE in base builder; do
     echo "Building ${IMAGE_TYPE} image for Ruby ${RUBY_MAJOR} (${RUBY_VERSION})"
-    IMAGE_NAME="govuk-ruby-${IMAGE_TYPE}"
+    IMAGE_NAME="publishing-platform-ruby-${IMAGE_TYPE}"
     docker build . \
-      -t "ghcr.io/alphagov/${IMAGE_NAME}:${RUBY_MAJOR}" \
+      -t "ghcr.io/publishing-platform/${IMAGE_NAME}:${RUBY_MAJOR}" \
       -f "${IMAGE_TYPE}.Dockerfile" \
       --build-arg "RUBY_MAJOR=${RUBY_MAJOR}" \
       --build-arg "RUBY_VERSION=${RUBY_VERSION}"
     docker tag \
-      "ghcr.io/alphagov/${IMAGE_NAME}:${RUBY_MAJOR}" \
-      "ghcr.io/alphagov/${IMAGE_NAME}:${RUBY_VERSION}"
+      "ghcr.io/publishing-platform/${IMAGE_NAME}:${RUBY_MAJOR}" \
+      "ghcr.io/publishing-platform/${IMAGE_NAME}:${RUBY_VERSION}"
 
     if [[ -n ${DRY_RUN:-} ]]; then
       echo "dry run: not pushing image to registry"
     else
       if [[ "${RUBY_IS_PATCH}" != "true" ]]; then
-        docker push "ghcr.io/alphagov/${IMAGE_NAME}:${RUBY_MAJOR}"
+        docker push "ghcr.io/publishing-platform/${IMAGE_NAME}:${RUBY_MAJOR}"
       fi
-      docker push "ghcr.io/alphagov/${IMAGE_NAME}:${RUBY_VERSION}"
+      docker push "ghcr.io/publishing-platform/${IMAGE_NAME}:${RUBY_VERSION}"
     fi
   done
 }
