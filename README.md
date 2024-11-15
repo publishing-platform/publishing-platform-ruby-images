@@ -1,5 +1,5 @@
 # Publishing Platform Ruby Images
-This repo contains Docker images intended for use as a base for Publishing Platform app containers. The publishing-platform-ruby-base image contains a Ruby installation, along with node.js and yarn. The publishing-platform-ruby-builder image contains environment variables and configuration for building Ruby applications.
+This repo contains Docker images intended for use as a base for Publishing Platform app containers. The `publishing-platform-ruby-base` image contains a Ruby installation, along with node.js and yarn. The `publishing-platform-ruby-builder` image contains environment variables and configuration for building Ruby applications.
 
 ## Usage
 
