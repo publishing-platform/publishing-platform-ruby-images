@@ -1,5 +1,4 @@
 FROM public.ecr.aws/lts/ubuntu:24.04_stable AS builder
-
 SHELL ["/bin/bash", "-euo", "pipefail", "-c"]
 
 # Helper script for installing Debian packages.
@@ -24,6 +23,8 @@ RUN install_packages curl ca-certificates g++ gpg libc-dev make bison patch libd
 # TODO: do this externally, in the build script.
 RUN curl -fsSL https://deb.nodesource.com/gpgkey/nodesource.gpg.key | gpg --dearmor > /usr/share/keyrings/nodesource.gpg
 
+# TODO: do the download and verification externally, in the build script.
+COPY SHA256SUMS /
 
 # Build/install Ruby and update the default gems so that we have an up-to-date
 # version of Bundler.
@@ -55,7 +56,6 @@ RUN set -x; \
 
 
 FROM public.ecr.aws/lts/ubuntu:24.04_stable
-
 SHELL ["/bin/bash", "-euo", "pipefail", "-c"]
 ARG RUBY_MAJOR
 
@@ -149,3 +149,5 @@ RUN set -x; \
     gem env; \
     bundle version; \
     rm -r /tmp/*;
+
+LABEL org.opencontainers.image.source=https://github.com/alphagov/govuk-ruby-images    
