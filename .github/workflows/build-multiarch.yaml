@@ -41,3 +41,18 @@ jobs:
             echo "matrix_versions=$(jq -c .version < build-matrix.json)"
             echo "runs_on=$(jq -c .runs_on < build-matrix.json)"
           } >> "$GITHUB_OUTPUT"  
+
+  build_and_push_image:
+    name: Build ruby_${{ join(matrix.version.rubyver, '.') }} for ${{ matrix.runs_on.arch }} and push to GHCR
+    needs: configure_builds
+    strategy:
+      matrix: ${{ fromJson(needs.configure_builds.outputs.matrix) }}
+    runs-on: ${{ matrix.runs_on.runner_type }}     
+    permissions:
+      packages: write
+    steps:
+      - name: Test        
+        run: |
+          echo $matrix
+          echo $matrix_versions
+          echo $runs_on
