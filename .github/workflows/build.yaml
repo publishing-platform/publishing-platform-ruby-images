@@ -39,6 +39,7 @@ jobs:
         with:
           ref: ${{ inputs.gitRef }}
           show-progress: false
+          token: ${{ secrets.GITHUB_TOKEN }}
       - name: Build images (without pushing to registry)
         if: ${{ inputs.noPushToRegistry }}
         env:
