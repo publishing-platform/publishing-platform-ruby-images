@@ -1,22 +1,5 @@
 # Publishing Platform Ruby Images
-OCI container images for building and running production Ruby applications on Kubernetes.
-
-## What's in this repo
-
-The publishing-platform-ruby-images repository defines [OCI] container images for building and running production Ruby applications on Kubernetes.
-
-- `publishing-platform-ruby-base` is a base image for production application containers; it provides:
-  - a Ruby runtime that can run as an unprivileged user with a read-only filesystem
-  - database client libraries
-  - a Node.js runtime
-
-- `publishing-platform-ruby-builder` is for building application container images; it provides the same as `publishing-platform-ruby-base` plus:
-  - a C/C++ toolchain and various build tools and utilities
-  - Yarn, for building/installing Node.js package dependencies
-  - configuration to speed up and optimise building Ruby applications
-
-[OCI]: https://opencontainers.org/
-
+This repo contains Docker images intended for use as a base for Publishing Platform app containers. The publishing-platform-ruby-base image contains a Ruby installation, along with node.js and yarn. The publishing-platform-ruby-builder image contains environment variables and configuration for building Ruby applications.
 
 ## Usage
 
@@ -39,16 +22,6 @@ FROM $base_image
 # your app image steps here
 ```
 
-## Supported tags
-
-Our version maintenance policy is similar to [upstream](https://www.ruby-lang.org/en/downloads/branches/)
-
-See [build-matrix.json](build-matrix.json#L2) for the list of Ruby versions we currently support.
-
-> [!IMPORTANT]
-> Please do not attempt to specify the Ruby patch version. See [below](#if-you-suspect-a-bug) for alternatives.
-
-
 ## Common problems and resolutions
 
 `ERROR: failed to solve: cannot copy to non-directory: /var/lib/docker/overlay2/.../merged/app/tmp`
@@ -58,14 +31,22 @@ Add `tmp/` to your `.dockerignore`. This is necessary because we symlink
 assume they can write to `Path.join(Rails.root, 'tmp')` so that we can run with
 `readOnlyRootFilesystem`.
 
+## Managing Ruby versions
 
-## Maintenance
+Ruby version information is kept in the [versions](versions/) directory. Each file in this directory is a shell script containing three variables that define a Ruby version:
 
+* `RUBY_MAJOR`: The major and minor Ruby version, excluding the patch version. For example, `3.2`. The image will be tagged with this version number (with `.` instead of `_`) unless `RUBY_IS_PATCH` is equal to the string `true`.
+* `RUBY_VERSION`: The full Ruby version, including patch version. This is used to download the Ruby source distribution. The image will be tagged with this version number, regardless of the value of `RUBY_IS_PATCH`.
+* `RUBY_IS_PATCH`: If equal to the string `true` then this version will **not** be tagged with the major.minor version number. (It will be tagged only with the full version number that includes the patch version.)
 
-### Add or update a Ruby version
+### Hashes of source tarballs for verification
 
-The file [build-matrix.json](/build-matrix.json) defines the Ruby versions and image tags that we build.
+The file [SHA256SUMS](SHA256SUMS) contains the SHA-256 hashes of the Ruby and OpenSSL source tarballs. These are verified at build-time.
 
-The `checksum` field is currently the SHA-256 hash of the Ruby source tarball. We verify this in the build.
+To add hashes for new Ruby/OpenSSL versions:
 
-See [Ruby Releases](https://www.ruby-lang.org/en/downloads/releases/) for the list of available Ruby tarballs and their SHA digests.
+1. Download the new source tarball(s).
+
+1. Run `sha256sum *gz >>SHA256SUMS`. If your system doesn't have `sha256sum`, try `shasum -a256`.
+
+1. Compare the new hashes with those listed on the [Ruby downloads page](https://www.ruby-lang.org/en/downloads/) and [OpenSSL downloads page](https://www.openssl.org/source/).
