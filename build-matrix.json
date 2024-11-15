@@ -1,0 +1,21 @@
+{
+  "version": [
+      {
+          "rubyver": [
+              "3", "2", "4"
+          ],
+          "checksum": "c72b3c5c30482dca18b0f868c9075f3f47d8168eaf626d4e682ce5b59c858692",
+          "extra": ""
+      }
+  ],
+  "runs_on": [
+      {
+          "runner_type": "ubuntu-latest",
+          "arch": "amd64"
+      },
+      {
+          "runner_type": "ubuntu-24.04-arm",
+          "arch": "arm64"
+      }
+  ]
+}

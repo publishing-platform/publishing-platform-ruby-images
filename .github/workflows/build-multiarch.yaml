@@ -1,0 +1,43 @@
+name: Build and push multi-arch images
+
+on:
+  workflow_dispatch:
+    inputs:
+      gitRef:
+        description: Commit, tag or branch name to deploy
+        required: true
+        type: string
+        default: main
+      pushToRegistry:
+        description: Push to image registry. Set to false to build without pushing.
+        required: true
+        type: boolean
+        default: true
+  # push:
+  #   branches:
+  #     - main
+  # schedule:
+  #   - cron: '34 3 * * *'
+
+env:
+  REGISTRY_BASE: ghcr.io/publishing-platform
+
+jobs:
+  configure_builds:
+    name: Read configuration from build-matrix.json
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+      matrix_versions: ${{ steps.set-matrix.outputs.matrix_versions }}
+      runs_on: ${{ steps.set-matrix.outputs.runs_on }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          show-progress: false
+      - id: set-matrix
+        run: |
+          {
+            echo "matrix=$(jq -c . < build-matrix.json)"
+            echo "matrix_versions=$(jq -c .version < build-matrix.json)"
+            echo "runs_on=$(jq -c .runs_on < build-matrix.json)"
+          } >> "$GITHUB_OUTPUT"  
