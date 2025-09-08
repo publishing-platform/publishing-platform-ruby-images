@@ -17,7 +17,7 @@ jobs:
     - uses: actions/checkout@v4
       with:
         show-progress: false
-    - uses: jbergstroem/hadolint-gh-action@39e57273ed8f513872326b228217828be6a42730  # v1.12.2
+    - uses: jbergstroem/hadolint-gh-action@2b00b87f8a56783930b6a4749837d7c45c567ff2  # v1.13.0
       with:
         dockerfile: '**/*Dockerfile'
         error_level: '1'  # Fail on warning or above.
