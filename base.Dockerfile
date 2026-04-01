@@ -1,4 +1,4 @@
-FROM public.ecr.aws/lts/ubuntu:24.04_stable AS builder
+FROM ubuntu:24.04 AS builder
 SHELL ["/bin/bash", "-euo", "pipefail", "-c"]
 
 # Helper script for installing Debian packages.
@@ -55,7 +55,7 @@ RUN set -x; \
     gem cleanup;
 
 
-FROM public.ecr.aws/lts/ubuntu:24.04_stable
+FROM ubuntu:24.04
 SHELL ["/bin/bash", "-euo", "pipefail", "-c"]
 ARG RUBY_MAJOR
 
