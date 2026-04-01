@@ -5,7 +5,7 @@ jobs:
     name: Shellcheck
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       with:
         show-progress: false
     - name: Run ShellCheck
@@ -14,10 +14,10 @@ jobs:
     name: Hadolint
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       with:
         show-progress: false
-    - uses: jbergstroem/hadolint-gh-action@39e57273ed8f513872326b228217828be6a42730  # v1.12.2
+    - uses: jbergstroem/hadolint-gh-action@d2f58da7f4f242dc0b6c5ef882ad4f8e871ba96b  # v1.15.0
       with:
         dockerfile: '**/*Dockerfile'
         error_level: '1'  # Fail on warning or above.
