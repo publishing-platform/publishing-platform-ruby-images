@@ -1,5 +1,5 @@
-ARG RUBY_MAJOR
-FROM ghcr.io/publishing-platform/publishing-platform-ruby-base:${RUBY_MAJOR}
+ARG RUBY_VERSION
+FROM ghcr.io/publishing-platform/publishing-platform-ruby-base:${RUBY_VERSION}
 
 RUN install_packages \
     g++ git gpg libc-dev libcurl4-openssl-dev libgdbm-dev libssl-dev \
